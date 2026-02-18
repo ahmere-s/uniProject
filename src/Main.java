@@ -42,14 +42,17 @@ public class Main {
 		    }	
 		}
 		
+		boolean foundPrime = false;
+		
 		do {
 			System.out.println("You have four options...");
 			System.out.println("Option 1: Search Matrix.");
 			System.out.println("Option 2: Sum Even Numbers.");
 			System.out.println("Option 3: Show Matrix.");
-			System.out.println("Option 4: Exit Program.");
+			System.out.println("Option 4: Find First Prime.");
+			System.out.println("Option 5: Exit Program.");
 			
-			System.out.print("Enter your number option -- 1-4 here: ");
+			System.out.print("Enter your number option -- 1-5 here: ");
 			userChoice = input.nextInt();
 			session.numOperations++; //Same as += 1
 			
@@ -61,11 +64,11 @@ public class Main {
 			    	userMatrix = input.nextInt();
 			    	boolean found = false;
 			    	mySearch:
-			    	for (int a = 0; a < matrix.length; a++){
-			    		for (int b = 0; b < matrix[0].length; b++){
-			    			if (matrix[a][b] == userMatrix){found = true; break mySearch;}
-			    		}
-			    	}
+			    	    for (int a = 0; a < matrix.length; a++){
+			    		    for (int b = 0; b < matrix[0].length; b++){
+			    			    if (matrix[a][b] == userMatrix){found = true; break mySearch;}
+			    		    }
+			    	    }
 			    	if (found == true){System.out.println("We found it!"); System.out.println();}
 			    	else {System.out.println("Number NOT found!"); System.out.println();}
 			    	break;
@@ -97,6 +100,21 @@ public class Main {
 			    	System.out.println();
 			    	break;
 			    case 4:
+			    	System.out.println("You chose to find the first prime number.");
+			    	searchPrime:
+			    	    for (int r = 0; r < userRow; r++){
+			    	    	for (int c = 0; c < userCol; c++){
+			    	    		if (isPrime(matrix[r][c])){
+			    	    			foundPrime = true;
+			    	    			System.out.println("Your first prime number is " + matrix[r][c] + ".");
+			    	    			break searchPrime;
+			    	    		}
+			    	    	}
+			    	    }
+			    	if (foundPrime != true){System.out.println("No prime found :(");}
+			    	System.out.println();
+			    	break;
+			    case 5:
 			    	System.out.println("You chose to EXIT!");
 			    	break;
 			    default:
@@ -105,7 +123,7 @@ public class Main {
 			    	break;
 			}
 			
-		} while (userChoice != 4);
+		} while (userChoice != 5);
 		
 		saveSession(session); //Log user session
 		System.out.println("Session saved.");
@@ -131,6 +149,18 @@ public class Main {
     	catch(IOException | ClassNotFoundException err){
     	    return new UserSession("studentUser"); // If file doesn't exist. 
     	}
+    }
+    
+    private static boolean isPrime(int num){
+    	if (num <= 1){return false;}
+    	else if (num <= 3){return true;}
+    	
+    	if (num % 2 == 0 || num % 3 == 0){return false;}
+    	
+    	for (int i = 1; i*i <= num; i += 6){
+    		if (num % i == 0 || num % (i + 2) == 0){return false;}
+    	}
+    	return true;
     }
 
 }
