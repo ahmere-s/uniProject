@@ -5,13 +5,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 
 public class Main {
+	private static final String LOG_FILE = "log.txt";
+	private static final String SESSION_FILE = "session.ser";
+	
     public static void main(String[] args) {
-	    final String LOG_FILE = "log.txt";
-	    final String SESSION_FILE = "session.ser";
-	    
-    	MatrixUtils haha = new MatrixUtils();
+    	UserSession session = loadSession();
+    	System.out.println("Welcome back, " + session.userName + ". Previous operations: " + session.numOperations);
+    	
+	    MatrixUtils haha = new MatrixUtils();
     	int[][] matrix = {{0, 1, 2},
 				          {1, 1, 2},
 				          {2, 1, 2}};
@@ -20,13 +27,15 @@ public class Main {
 		Scanner input = new Scanner(System.in);
 		
 		do {
-			System.out.println("You have three options...");
+			System.out.println("You have four options...");
 			System.out.println("Option 1: Search Matrix.");
 			System.out.println("Option 2: Sum Even Numbers.");
-			System.out.println("Option 3: Exit program.");
+			System.out.println("Option 3: Show Matrix.");
+			System.out.println("Option 4: Exit Program.");
 			
-			System.out.print("Enter your number option -- 1-3 here: ");
+			System.out.print("Enter your number option -- 1-4 here: ");
 			userChoice = input.nextInt();
+			session.numOperations++; //Same as += 1
 			
 			switch (userChoice){
 			    case 1:
@@ -36,11 +45,11 @@ public class Main {
 			    	userMatrix = input.nextInt();
 			    	boolean found = false;
 			    	mySearch:
-			    		for (int a = 0; a < matrix.length; a++){
-			    			for (int b = 0; b < matrix[0].length; b++){
-			    				if (matrix[a][b] == userMatrix){found = true; break mySearch;}
-			    			}
+			    	for (int a = 0; a < matrix.length; a++){
+			    		for (int b = 0; b < matrix[0].length; b++){
+			    			if (matrix[a][b] == userMatrix){found = true; break mySearch;}
 			    		}
+			    	}
 			    	if (found == true){System.out.println("We found it!"); System.out.println();}
 			    	else {System.out.println("Number NOT found!"); System.out.println();}
 			    	break;
@@ -57,7 +66,7 @@ public class Main {
 			    	
 			    	//Write results to file
 			    	try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE))){
-			    		fileWrite.write("Last result: " + userTotal + "\n");
+			    		fileWrite.write("Last calculated sum: " + userTotal + "\n");
 			    		LocalDateTime currently = LocalDateTime.now();
 			    		String timestamp = currently.format(DateTimeFormatter.ofPattern("MM-dd-YYYY HH:mm:ss"));
 			    		fileWrite.write(timestamp);
@@ -67,7 +76,12 @@ public class Main {
 			    	}
 			    	break;
 			    case 3:
-			    	System.out.println("Exiting...");
+			    	System.out.println("Here is the matrix: ");
+			    	haha.printMatrix(matrix);
+			    	System.out.println();
+			    	break;
+			    case 4:
+			    	System.out.println("You chose to EXIT!");
 			    	break;
 			    default:
 			    	System.out.println("Read carefully and try again!");
@@ -75,9 +89,32 @@ public class Main {
 			    	break;
 			}
 			
-		} while (userChoice != 3);
+		} while (userChoice != 4);
 		
-		input.close();
+		saveSession(session); //Log user session
+		System.out.println("Session saved.");
+		System.out.println("Exiting...");
+		input.close(); //Avoid Leaks
 	}
+    
+    // --------- HELPER METHODS ----------- //
+    //Serialize Object
+    private static void saveSession(UserSession session){
+    	try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(SESSION_FILE))){
+    		oos.writeObject(session);
+    	}
+    	catch(IOException err){
+    		err.printStackTrace();
+    	}
+    }
+    //Deserialize Object
+    private static UserSession loadSession(){
+    	try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(SESSION_FILE))){
+    		return (UserSession) ois.readObject();
+    	}
+    	catch(IOException | ClassNotFoundException err){
+    	    return new UserSession("studentUser"); // If file doesn't exist. 
+    	}
+    }
 
 }
