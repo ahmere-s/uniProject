@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.Random;
 
 public class Main {
 	private static final String LOG_FILE = "log.txt";
@@ -19,12 +20,27 @@ public class Main {
     	System.out.println("Welcome back, " + session.userName + ". Previous operations: " + session.numOperations);
     	
 	    MatrixUtils haha = new MatrixUtils();
-    	int[][] matrix = {{0, 1, 2},
-				          {1, 1, 2},
-				          {2, 1, 2}};
-		
+	    
+	    System.out.println("First I need you to specify the size of your matrix.");
+	    int userRow;
+	    int userCol;
 		int userChoice;
 		Scanner input = new Scanner(System.in);
+		System.out.println("Enter number of rows: ");
+		userRow = input.nextInt();
+		System.out.println("Enter number of columns: ");
+		userCol = input.nextInt();
+		
+		int[][] matrix = new int[userRow][userCol];
+		Random randy = new Random();
+		
+		for (int row = 0; row < userRow; row++){
+		    for (int col = 0; col < userCol; col++){
+		    	if (matrix[row][col] == 0){
+		    		matrix[row][col] = randy.nextInt(100) + 1;
+		    	}
+		    }	
+		}
 		
 		do {
 			System.out.println("You have four options...");
