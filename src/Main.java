@@ -1,4 +1,5 @@
 import com.lab.utils.MatrixUtils;
+import com.lab.utils.MathTools;
 import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -20,6 +21,7 @@ public class Main {
     	System.out.println("Welcome back, " + session.userName + ". Previous operations: " + session.numOperations);
     	
 	    MatrixUtils haha = new MatrixUtils();
+	    MathTools math = new MathTools();
 	    
 	    System.out.println("First I need you to specify the size of your matrix.");
 	    int userRow;
@@ -41,7 +43,7 @@ public class Main {
 		    	}
 		    }	
 		}
-		
+		System.out.println("Matrix has been created.");
 		boolean foundPrime = false;
 		
 		do {
@@ -104,7 +106,7 @@ public class Main {
 			    	searchPrime:
 			    	    for (int r = 0; r < userRow; r++){
 			    	    	for (int c = 0; c < userCol; c++){
-			    	    		if (isPrime(matrix[r][c])){
+			    	    		if (math.isPrime(matrix[r][c])){
 			    	    			foundPrime = true;
 			    	    			System.out.println("Your first prime number is " + matrix[r][c] + ".");
 			    	    			break searchPrime;
@@ -147,20 +149,8 @@ public class Main {
     		return (UserSession) ois.readObject();
     	}
     	catch(IOException | ClassNotFoundException err){
-    	    return new UserSession("studentUser"); // If file doesn't exist. 
+    	    return new UserSession("studentUser"); // If file doesn't already exist. 
     	}
     }
-    
-    private static boolean isPrime(int num){
-    	if (num <= 1){return false;}
-    	else if (num <= 3){return true;}
-    	
-    	if (num % 2 == 0 || num % 3 == 0){return false;}
-    	
-    	for (int i = 1; i*i <= num; i += 6){
-    		if (num % i == 0 || num % (i + 2) == 0){return false;}
-    	}
-    	return true;
-    }
-
+ 
 }
