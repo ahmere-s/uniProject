@@ -18,7 +18,9 @@ public class Main {
 	
     public static void main(String[] args) {
     	UserSession session = loadSession();
-    	System.out.println("Welcome back, " + session.userName + ". Previous operations: " + session.numOperations);
+    	System.out.println("Welcome back, " + session.userName + ".");
+    	System.out.println("Operations: " + session.numOperations);
+    	System.out.println("Prime number checks: " + session.totalPrimeChecks);
     	
 	    MatrixUtils haha = new MatrixUtils();
 	    MathTools math = new MathTools();
@@ -86,11 +88,10 @@ public class Main {
 			    	System.out.println();
 			    	
 			    	//Write results to file
-			    	try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE))){
-			    		fileWrite.write("Last calculated sum: " + userTotal + "\n");
+			    	try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE, true))){ //Instead of just.. new FileWriter(LOG_FILE) because without ", true" it continues to create new and overwrite file instead of just appending.
 			    		LocalDateTime currently = LocalDateTime.now();
 			    		String timestamp = currently.format(DateTimeFormatter.ofPattern("MM-dd-YYYY HH:mm:ss"));
-			    		fileWrite.write(timestamp);
+			    		fileWrite.write(timestamp + "Sum calculated: " + userTotal + "\n");
 			    	}
 			    	catch (IOException err){
 			    		err.printStackTrace();
@@ -103,6 +104,7 @@ public class Main {
 			    	break;
 			    case 4:
 			    	System.out.println("You chose to find the first prime number.");
+			    	session.totalPrimeChecks++;
 			    	searchPrime:
 			    	    for (int r = 0; r < userRow; r++){
 			    	    	for (int c = 0; c < userCol; c++){
@@ -111,10 +113,11 @@ public class Main {
 			    	    			System.out.println("Your first prime number is " + matrix[r][c] + ".");
 			    	    			
 			    	    			//Log if found
-			    	    			try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE))){
+			    	    			try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE, true))){
 			    	    				LocalDateTime currently = LocalDateTime.now();
 			    	    				String timestamp = currently.format(DateTimeFormatter.ofPattern("MM-dd-YYYY HH:mm:ss"));
 			    	    				fileWrite.write(timestamp + " PRIME FOUND: " + matrix[r][c] + " at index [" + r + "][" + c + "]");
+			    	    				fileWrite.write("\n");
 			    	    			}
 			    	    			catch (IOException err){
 			    	    				err.printStackTrace();
