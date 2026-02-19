@@ -91,7 +91,7 @@ public class Main {
 			    	try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE, true))){ //Instead of just.. new FileWriter(LOG_FILE) because without ", true" it continues to create new and overwrite file instead of just appending.
 			    		LocalDateTime currently = LocalDateTime.now();
 			    		String timestamp = currently.format(DateTimeFormatter.ofPattern("MM-dd-YYYY HH:mm:ss"));
-			    		fileWrite.write(timestamp + "Sum calculated: " + userTotal + "\n");
+			    		fileWrite.write(timestamp + " Sum calculated: " + userTotal + "\n");
 			    	}
 			    	catch (IOException err){
 			    		err.printStackTrace();
