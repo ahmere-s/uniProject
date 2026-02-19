@@ -28,9 +28,9 @@ public class Main {
 	    int userCol;
 		int userChoice;
 		Scanner input = new Scanner(System.in);
-		System.out.println("Enter number of rows: ");
+		System.out.println("Enter digit for number of rows: ");
 		userRow = input.nextInt();
-		System.out.println("Enter number of columns: ");
+		System.out.println("Enter digit for number of columns: ");
 		userCol = input.nextInt();
 		
 		int[][] matrix = new int[userRow][userCol];
@@ -109,11 +109,22 @@ public class Main {
 			    	    		if (math.isPrime(matrix[r][c])){
 			    	    			foundPrime = true;
 			    	    			System.out.println("Your first prime number is " + matrix[r][c] + ".");
+			    	    			
+			    	    			//Log if found
+			    	    			try (BufferedWriter fileWrite = new BufferedWriter(new FileWriter(LOG_FILE))){
+			    	    				LocalDateTime currently = LocalDateTime.now();
+			    	    				String timestamp = currently.format(DateTimeFormatter.ofPattern("MM-dd-YYYY HH:mm:ss"));
+			    	    				fileWrite.write(timestamp + " PRIME FOUND: " + matrix[r][c] + " at index [" + r + "][" + c + "]");
+			    	    			}
+			    	    			catch (IOException err){
+			    	    				err.printStackTrace();
+			    	    			}
 			    	    			break searchPrime;
 			    	    		}
 			    	    	}
 			    	    }
 			    	if (foundPrime != true){System.out.println("No prime found :(");}
+			    	//System.out.println(MathTools.primeCheckCount);   //This would print if I made primeCheckCount public inside of the MathTools class.
 			    	System.out.println();
 			    	break;
 			    case 5:

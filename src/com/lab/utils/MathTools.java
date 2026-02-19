@@ -1,7 +1,11 @@
 package com.lab.utils;
 
 public class MathTools {
+	
+	static int primeCheckCount = 0;
 	public boolean isPrime(int num){
+		primeCheckCount++;
+		
 		if(num <= 1){return false;}
 		else if (num <= 3){return true;}
 		
